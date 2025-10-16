@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Máy tính đơn giản</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial; margin: 40px; text-align: center; }
+    #display { width: 300px; font-size: 24px; padding: 10px; margin-bottom: 10px; }
+    .btn { width: 60px; height: 40px; font-size: 18px; margin: 5px; cursor: pointer; }
+    #result { margin-top: 20px; font-weight: bold; font-size: 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>Máy tính đơn giản</h2>
+  <input type="text" id="display" placeholder="Nhập biểu thức (vd: 12+5)">
+  <br>
+
+  <!-- Các nút số và toán tử -->
+  <div id="buttons">
+    <button class="btn">1</button>
+    <button class="btn">2</button>
+    <button class="btn">3</button>
+    <button class="btn">+</button><br>
+    <button class="btn">4</button>
+    <button class="btn">5</button>
+    <button class="btn">6</button>
+    <button class="btn">-</button><br>
+    <button class="btn">7</button>
+    <button class="btn">8</button>
+    <button class="btn">9</button>
+    <button class="btn">*</button><br>
+    <button class="btn">0</button>
+    <button class="btn">C</button>
+    <button class="btn">=</button>
+    <button class="btn">/</button>
+  </div>
+
+  <div id="result">Kết quả: </div>
+
+  <script>
+    $(document).ready(function() {
+      // Xử lý nút bấm
+      $('.btn').click(function() {
+        const val = $(this).text();
+        if (val === 'C') {
+          $('#display').val('');
+          $('#result').text('Kết quả: ');
+        } else if (val === '=') {
+          const expr = $('#display').val().trim();
+          const match = expr.match(/^(\d+)([+\-*/])(\d+)$/);
+
+          if (!match) {
+            $('#result').text('Biểu thức không hợp lệ. Vui lòng nhập đúng định dạng.');
+            return;
+          }
+
+          const a = parseFloat(match[1]);
+          const op = match[2];
+          const b = parseFloat(match[3]);
+          let res;
+
+          if (op === '/' && b === 0) {
+            res = 'Không thể chia cho 0';
+          } else {
+            switch (op) {
+              case '+': res = a + b; break;
+              case '-': res = a - b; break;
+              case '*': res = a * b; break;
+              case '/': res = a / b; break;
+            }
+          }
+
+          $('#result').text('Kết quả: ' + res);
+        } else {
+          $('#display').val($('#display').val() + val);
+        }
+      });
+
+      // Cho phép nhấn Enter để tính
+      $('#display').keypress(function(e) {
+        if (e.which === 13) {
+          $('.btn:contains("=")').click();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
