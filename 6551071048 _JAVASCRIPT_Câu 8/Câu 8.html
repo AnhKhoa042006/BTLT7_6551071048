@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Máy tính đơn giản bằng jQuery</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial; margin: 30px; }
+    input, button { margin: 5px; padding: 5px; }
+    .operator { margin: 0 5px; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; display: inline-block; }
+    .operator:hover { background-color: #f0f0f0; }
+    #result { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Máy tính đơn giản</h2>
+
+  <input type="number" id="num1" placeholder="Số thứ nhất">
+  <span class="operator" data-op="+">+</span>
+  <span class="operator" data-op="-">−</span>
+  <span class="operator" data-op="*">×</span>
+  <span class="operator" data-op="/">÷</span>
+  <span class="operator" data-op="^">^</span>
+  <input type="number" id="num2" placeholder="Số thứ hai">
+  <button id="calculate">=</button>
+
+  <div id="result">Kết quả: </div>
+
+  <script>
+    $(document).ready(function() {
+      let selectedOp = '+';
+
+      $('.operator').click(function() {
+        selectedOp = $(this).data('op');
+        $('.operator').css('background-color', '');
+        $(this).css('background-color', '#d0eaff');
+      });
+
+      $('#calculate').click(function() {
+        const a = parseFloat($('#num1').val());
+        const b = parseFloat($('#num2').val());
+        let result;
+
+        if (isNaN(a) || isNaN(b)) {
+          $('#result').text('Vui lòng nhập đầy đủ hai số.');
+          return;
+        }
+
+        switch (selectedOp) {
+          case '+': result = a + b; break;
+          case '-': result = a - b; break;
+          case '*': result = a * b; break;
+          case '/': result = b !== 0 ? a / b : 'Errol!!!'; break;
+          case '^': result = Math.pow(a, b); break;
+          default: result = ' Errol!!! ';
+        }
+
+        $('#result').text('Kết quả: ' + result);
+      });
+    });
+  </script>
+
+</body>
+</html>
