@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Đăng Ký Người Dùng</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial; margin: 30px; }
+    label { display: block; margin-top: 10px; }
+    input, select { margin-top: 5px; padding: 5px; width: 300px; }
+    .error { color: red; margin-top: 5px; }
+    button { margin-top: 15px; padding: 8px 16px; }
+  </style>
+</head>
+<body>
+
+  <h2>Form Đăng Ký Thông Tin Người Dùng</h2>
+
+  <form id="registerForm">
+    <label>Họ tên*:</label>
+    <input type="text" id="name">
+
+    <label>Giới tính*:</label>
+    <input type="radio" name="gender" value="Nam"> Nam
+    <input type="radio" name="gender" value="Nữ"> Nữ
+
+    <label>Email*:</label>
+    <input type="text" id="email">
+
+    <label>Ngày sinh (mm/dd/yyyy hoặc mm-dd-yyyy)*:</label>
+    <input type="text" id="birthday">
+
+    <label>Địa chỉ*:</label>
+    <input type="text" id="address">
+
+    <label>Thành phố*:</label>
+    <input type="text" id="city">
+
+    <label>Khu vực*:</label>
+    <select id="region">
+      <option value="">--Chọn khu vực--</option>
+      <option value="Miền Bắc">Miền Bắc</option>
+      <option value="Miền Trung">Miền Trung</option>
+      <option value="Miền Nam">Miền Nam</option>
+    </select>
+
+    <label>Mã Zip (5 chữ số)*:</label>
+    <input type="text" id="zipcode">
+
+    <div>
+      <button type="button" id="finishBtn">Finish</button>
+      <button type="button" id="clearBtn">Clear</button>
+    </div>
+  </form>
+
+  <script>
+    $(document).ready(function() {
+      $('#clearBtn').click(function() {
+        $('#registerForm')[0].reset();
+      });
+
+      $('#finishBtn').click(function() {
+        let errors = [];
+
+        const name = $('#name').val().trim();
+        const gender = $('input[name="gender"]:checked').val();
+        const email = $('#email').val().trim();
+        const birthday = $('#birthday').val().trim();
+        const address = $('#address').val().trim();
+        const city = $('#city').val().trim();
+        const region = $('#region').val();
+        const zipcode = $('#zipcode').val().trim();
+
+        // Kiểm tra các trường bắt buộc
+        if (!name) errors.push("Họ tên không được để trống.");
+        if (!gender) errors.push("Vui lòng chọn giới tính.");
+        if (!email) {
+          errors.push("Email không được để trống.");
+        } else {
+          const emailRegex = /^[^@.\s]+(\.[^@.\s]+)?@[^@.\s]+\.[^@.\s]+$/;
+          if (!emailRegex.test(email)) {
+            errors.push("Email không hợp lệ.");
+          }
+        }
+
+        if (!birthday) {
+          errors.push("Ngày sinh không được để trống.");
+        } else {
+          const dateRegex = /^(0[1-9]|1[0-2])[\/\-](0[1-9]|[12][0-9]|3[01])[\/\-](\d{4})$/;
+          const match = birthday.match(dateRegex);
+          if (!match) {
+            errors.push("Ngày sinh không đúng định dạng mm/dd/yyyy hoặc mm-dd-yyyy.");
+          } else {
+            const year = parseInt(match[3]);
+            const currentYear = new Date().getFullYear();
+            if (year >= currentYear) {
+              errors.push("Năm sinh phải nhỏ hơn năm hiện tại.");
+            }
+          }
+        }
+
+        if (!address) errors.push("Địa chỉ không được để trống.");
+        if (!city) errors.push("Thành phố không được để trống.");
+        if (!region) errors.push("Vui lòng chọn khu vực.");
+
+        if (!zipcode) {
+          errors.push("Mã Zip không được để trống.");
+        } else if (!/^\d{5}$/.test(zipcode)) {
+          errors.push("Mã Zip phải đúng 5 chữ số.");
+        }
+
+        if (errors.length > 0) {
+          alert("Vui lòng kiểm tra lại các lỗi sau:\n\n" + errors.join("\n"));
+        } else {
+          alert("Đăng ký thành công!");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
